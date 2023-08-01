@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Speech API Example</title>
+  </head>
+  <body>
+    <p onclick="location.href='index.html'"><=Back</p>
+    <textarea id="text-to-read" rows="25" cols="100">
+Hello! Welcome to our website. We are excited to showcase the features of the Web Speech API. With this API, you can add speech recognition and speech synthesis to your web applications. Users can interact with your app by speaking, and it will convert their speech to text. Similarly, you can make your website talk by providing text, and the API will convert it into speech. This opens up a world of possibilities for building interactive and user-friendly applications. Remember to obtain user consent before using speech recognition, and ensure responsible use of this technology. Enjoy experimenting with the Web Speech API and creating amazing voice-enabled applications!</textarea
+    ><br />
+    <button id="speak-button">Speak</button>
+    <button id="stop-button">Stop</button>
+  </body>
+  <script>
+    // Check if the browser supports the Web Speech API
+    if ("speechSynthesis" in window) {
+      const synth = window.speechSynthesis;
+      const speakButton = document.getElementById("speak-button");
+      const stopButton = document.getElementById("stop-button");
+      const textToRead = document.getElementById("text-to-read");
+
+      // Create a SpeechSynthesisUtterance object
+      const utterance = new SpeechSynthesisUtterance();
+
+      // Set the text that needs to be spoken
+      utterance.text = "";
+
+      // Handle Speak button click
+      speakButton.addEventListener("click", () => {
+        utterance.text = textToRead.value;
+        synth.speak(utterance);
+      });
+
+      // Handle Stop button click
+      stopButton.addEventListener("click", () => {
+        synth.cancel();
+      });
+    } else {
+      console.log("Web Speech API is not supported in this browser.");
+    }
+  </script>
+</html>
