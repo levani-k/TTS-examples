@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Speech API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f0f0f0; /* Set background color */
+      }
+
+      textarea {
+        width: 100%;
+        resize: vertical;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px; /* Font size increased for better readability on mobile */
+        border: 1px solid #ccc;
+        background-color: #fff;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4caf50; /* Green background color */
+        color: #fff; /* White text color */
+        border: none;
+        border-radius: 5px;
+      }
+
+      h2 {
+        margin-top: 20px;
+      }
+
+      #back-button {
+        /* position: absolute; */
+        /* top: 20px; Add space from the top */
+        /* left: 20px; */
+        background-color: #008cba; /* Blue background color for arrow */
+        color: #fff; /* White text color */
+        border: none;
+        font-size: 18px;
+        padding: 10px 15px;
+        cursor: pointer;
+        /* transform: rotate(-45deg); Rotate the arrow */
+      }
+
+      #back-button:hover {
+        background-color: #005b80; /* Darker blue on hover */
+      }
+
+      /* Add pointer style on mouse hover for list items */
+      li {
+        cursor: pointer;
+      }
+
+      @media (min-width: 600px) {
+        /* Styles for mobile */
+        button {
+          width: 200px;
+          height: 100px;
+          padding: 20px 25px;
+          font-size: 20px;
+        }
+
+        #back-button {
+          /* top: 20px; Adjust the space from the top */
+          /* left: 20px; */
+          font-size: 24px;
+          padding: 12px 20px;
+        }
+
+        textarea {
+          padding: 15px;
+          font-size: 18px; /* Font size increased further for mobile */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="back-button">↶ Back</button>
+    <!-- Add the "Back" arrow button -->
+    <textarea
+      id="text-to-read"
+      rows="10"
+      cols="40"
+      placeholder="Enter text to read..."
+    >
+The Web Speech API allows developers to integrate speech synthesis (text-to-speech) and speech recognition (speech-to-text) into web applications. It provides an easy-to-use interface for converting text into spoken words and vice versa. With the Web Speech API, developers can create voice-enabled applications, interactive voice commands, and more.</textarea
+    ><br />
+    <button id="speak-button">Speak</button>
+    <button id="stop-button">Stop</button>
+    <h2>Available Voices:</h2>
+    <ul id="voices-list"></ul>
+
+    <script>
+      // Add an event listener to the "Back" button
+      document
+        .getElementById("back-button")
+        .addEventListener("click", function () {
+          window.location.href = "index.html"; // Adjust the path if necessary
+        });
+
+      if ("speechSynthesis" in window) {
+        const synth = window.speechSynthesis;
+        const speakButton = document.getElementById("speak-button");
+        const stopButton = document.getElementById("stop-button");
+        const textToRead = document.getElementById("text-to-read");
+
+        // Create a SpeechSynthesisUtterance object
+        const utterance = new SpeechSynthesisUtterance();
+
+        // Set the default text to be spoken
+        utterance.text =
+          "The Web Speech API allows developers to integrate speech synthesis (text-to-speech) and speech recognition (speech-to-text) into web applications. It provides an easy-to-use interface for converting text into spoken words and vice versa. With the Web Speech API, developers can create voice-enabled applications, interactive voice commands, and more.";
+
+        // Function to set the desired voice
+        function setDesiredVoice(voiceName) {
+          const voices = synth.getVoices();
+          const desiredVoice = voices.find((voice) => voice.name === voiceName);
+          if (desiredVoice) {
+            utterance.voice = desiredVoice;
+            // Restart speech synthesis with the new voice
+            synth.cancel();
+            synth.speak(utterance);
+          }
+        }
+
+        // Get voices when the 'voiceschanged' event occurs
+        window.speechSynthesis.onvoiceschanged = function () {
+          const voices = synth.getVoices();
+          const voicesList = document.getElementById("voices-list");
+
+          voicesList.innerHTML = ""; // Clear previous list
+
+          voices.forEach(function (voice) {
+            const listItem = document.createElement("li");
+            listItem.textContent = voice.name + " (" + voice.lang + ")";
+            listItem.addEventListener("click", function () {
+              setDesiredVoice(voice.name);
+            });
+            voicesList.appendChild(listItem);
+          });
+        };
+
+        // Handle Speak button click
+        speakButton.addEventListener("click", () => {
+          utterance.text = textToRead.value;
+          synth.speak(utterance);
+        });
+
+        // Handle Stop button click
+        stopButton.addEventListener("click", () => {
+          synth.cancel();
+        });
+
+        // Trigger the 'voiceschanged' event to ensure voices are loaded
+        synth.getVoices();
+      } else {
+        console.log("Web Speech API is not supported in this browser.");
+      }
+    </script>
+  </body>
+</html>
