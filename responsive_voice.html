@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ResponsiveVoice.js Example</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f0f0f0; /* Set background color */
+      }
+
+      textarea {
+        width: 100%;
+        resize: vertical;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4caf50; /* Green background color */
+        color: #fff; /* White text color */
+        border: none;
+        border-radius: 5px;
+      }
+
+      h2 {
+        margin-top: 20px;
+      }
+
+      #back-button {
+        /* position: absolute;
+        top: 20px;
+        left: 20px; */
+        background-color: #008cba; /* Blue background color for arrow */
+        color: #fff; /* White text color */
+        border: none;
+        font-size: 18px;
+        padding: 10px 15px;
+        cursor: pointer;
+        /* transform: rotate(-45deg); Rotate the arrow */
+      }
+
+      #back-button:hover {
+        background-color: #005b80; /* Darker blue on hover */
+      }
+
+      .voices-list-item {
+        cursor: pointer;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+
+      @media (min-width: 600px) {
+        /* Styles for mobile */
+        button {
+          width: 200px;
+          height: 100px;
+          padding: 20px 25px;
+          font-size: 20px;
+        }
+
+        #back-button {
+          /* top: 20px; Adjust the space from the top */
+          /* left: 20px; */
+          font-size: 24px;
+          padding: 12px 20px;
+        }
+
+        textarea {
+          padding: 15px;
+          font-size: 18px; /* Font size increased further for mobile */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="back-button">↶ Back</button>
+    <!-- Add the "Back" arrow button -->
+    <textarea
+      id="text-to-read"
+      rows="10"
+      cols="40"
+      placeholder="Enter text to read..."
+    >
+ResponsiveVoice.js is a versatile Text-To-Speech (TTS) JavaScript library that brings natural and lifelike voice synthesis to your web applications. Easily integrate dynamic text-to-speech capabilities with customizable voices, pitches, and rates. Enhance user interactions, accessibility, and user experiences by adding a touch of personality to your app. Try it out and bring your content to life with ResponsiveVoice.js!</textarea
+    ><br />
+    <button id="speak-button">Speak</button>
+    <button id="stop-button">Stop</button>
+    <h2>Available Voices:</h2>
+    <div id="voices-list"></div>
+    <script>
+      document
+        .getElementById("back-button")
+        .addEventListener("click", function () {
+          window.location.href = "index.html";
+        });
+
+      document
+        .getElementById("speak-button")
+        .addEventListener("click", function () {
+          const textToRead = document.getElementById("text-to-read").value;
+          responsiveVoice.speak(textToRead, "UK English Male", { rate: 1.0 });
+        });
+
+      document
+        .getElementById("stop-button")
+        .addEventListener("click", function () {
+          responsiveVoice.cancel();
+        });
+
+      function populateVoices() {
+        const voices = responsiveVoice.getVoices();
+
+        if (voices.length === 0) {
+          alert("No available voices found.");
+          return;
+        }
+
+        const voicesList = document.getElementById("voices-list");
+
+        voices.forEach((voice) => {
+          const listItem = document.createElement("div");
+          listItem.classList.add("voices-list-item");
+          listItem.textContent = voice.name + " (" + voice.lang + ")";
+          listItem.addEventListener("click", function () {
+            // Stop the speech if already speaking
+            responsiveVoice.cancel();
+            // Set the new voice and speak again
+            responsiveVoice.setDefaultVoice(voice.name);
+            const textToRead = document.getElementById("text-to-read").value;
+            responsiveVoice.speak(textToRead, voice.name, { rate: 1.0 });
+          });
+          voicesList.appendChild(listItem);
+        });
+      }
+
+      populateVoices();
+    </script>
+  </body>
+</html>
