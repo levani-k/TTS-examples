@@ -131,7 +131,8 @@ ResponsiveVoice.js is a versatile Text-To-Speech (TTS) JavaScript library that b
         voices.forEach((voice) => {
           const listItem = document.createElement("div");
           listItem.classList.add("voices-list-item");
-          listItem.textContent = voice.name + " (" + voice.lang + ")";
+          // listItem.textContent = voice.name + " (" + voice.lang + ")";
+          listItem.textContent = voice.name;
           listItem.addEventListener("click", function () {
             // Stop the speech if already speaking
             responsiveVoice.cancel();
